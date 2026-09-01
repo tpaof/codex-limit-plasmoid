@@ -1,0 +1,18 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Codex Limit Widget contributors"
+            }
+        ],
+        "Category": "System Information",
+        "Description": "Unofficial local Codex usage-limit monitor for KDE Plasma",
+        "Icon": "/images/codex-limit.svg",
+        "Id": "dev.codex.limitwatch",
+        "License": "MIT",
+        "Name": "Codex Limit",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

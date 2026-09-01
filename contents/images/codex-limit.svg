@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: 2026 Codex Limit contributors
+SPDX-License-Identifier: MIT
+
+Original Codex Limit artwork. This is not an OpenAI or Codex logo.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Codex Limit terminal and usage ring</title>
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="32" r="27" stroke-width="5"
+            stroke-dasharray="142 28" transform="rotate(-48 32 32)"/>
+    <path d="M18 23l9 9-9 9" stroke-width="5"/>
+    <path d="M34 41h13" stroke-width="5"/>
+  </g>
+</svg>

@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Run checks
+        run: ./scripts/check.sh
+
+      - name: Build release package
+        run: ./scripts/package.sh
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codex-limit-plasmoid
+          path: codex-limit.plasmoid
+          if-no-files-found: error

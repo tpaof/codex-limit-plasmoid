@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Run checks
+        run: ./scripts/check.sh
+
+      - name: Verify tag matches package version
+        run: |
+          package_version="$(python3 -c 'import json; print(json.load(open("metadata.json", encoding="utf-8"))["KPlugin"]["Version"])')"
+          test "$GITHUB_REF_NAME" = "v$package_version"
+
+      - name: Build package
+        run: ./scripts/package.sh
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: codex-limit.plasmoid
+          generate_release_notes: true

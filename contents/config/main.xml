@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-FileCopyrightText: 2026 Codex Limit contributors -->
+<!-- SPDX-License-Identifier: MIT -->
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name="" />
+    <group name="General">
+        <entry name="customIcon" type="String">
+            <label>Custom icon name or image path</label>
+            <default></default>
+        </entry>
+        <entry name="panelIconSize" type="Int">
+            <label>Panel icon size in pixels</label>
+            <default>22</default>
+        </entry>
+        <entry name="showPanelIcon" type="Bool">
+            <label>Show the icon on the panel</label>
+            <default>true</default>
+        </entry>
+        <entry name="showCodexLabel" type="Bool">
+            <label>Show the Codex label on the panel</label>
+            <default>true</default>
+        </entry>
+        <entry name="panelDisplayMode" type="Int">
+            <label>Usage display mode on the panel</label>
+            <default>0</default>
+        </entry>
+        <entry name="refreshInterval" type="Int">
+            <label>Refresh interval in seconds</label>
+            <default>60</default>
+        </entry>
+    </group>
+</kcfg>

@@ -1,0 +1,37 @@
+name: Bug report
+description: Report a reproducible Codex Limit problem
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not attach Codex session JSONL files, prompts, responses, credentials, or other private data.
+  - type: input
+    id: version
+    attributes:
+      label: Widget version
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: plasma
+    attributes:
+      label: KDE Plasma version and distribution
+      placeholder: Plasma 6.x on distribution name
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Include steps to reproduce and the expected behavior without private session data.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs
+      description: Optional. Remove usernames, home paths, prompts, responses, tokens, and credentials first.
+      render: shell

@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+*.plasmoid
+*.kate-swp
+.idea/
+.vscode/
+
+# Legacy local artwork. Public builds use the original MIT-licensed SVG.
+contents/images/codex.png
