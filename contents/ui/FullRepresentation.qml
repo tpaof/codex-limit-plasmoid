@@ -33,35 +33,55 @@ Item {
         anchors.margins: Kirigami.Units.largeSpacing
         spacing: Kirigami.Units.largeSpacing
 
-        RowLayout {
+        Item {
             Layout.fillWidth: true
+            implicitHeight: Math.max(headerContent.implicitHeight, refreshButton.implicitHeight)
 
-            Kirigami.Icon {
-                Layout.preferredWidth: Kirigami.Units.iconSizes.medium
-                Layout.preferredHeight: width
-                source: widget.displayIcon
-                fallback: widget.codexIcon
-                isMask: widget.usingDefaultIcon
-                color: "white"
-            }
+            RowLayout {
+                id: headerContent
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 0
+                anchors.left: parent.left
+                anchors.right: refreshButton.left
+                anchors.rightMargin: Kirigami.Units.smallSpacing
+                anchors.verticalCenter: parent.verticalCenter
 
-                PlasmaComponents.Label {
-                    text: qsTr("Codex usage")
-                    font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.2
-                    font.weight: Font.Bold
+                Kirigami.Icon {
+                    Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+                    Layout.preferredHeight: width
+                    source: widget.displayIcon
+                    fallback: widget.codexIcon
+                    isMask: widget.usingDefaultIcon
+                    color: "white"
                 }
 
-                PlasmaComponents.Label {
-                    text: widget.planType ? widget.planType.charAt(0).toUpperCase() + widget.planType.slice(1) + qsTr(" plan") : qsTr("Local account")
-                    color: Kirigami.Theme.disabledTextColor
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 0
+
+                    PlasmaComponents.Label {
+                        Layout.fillWidth: true
+                        text: qsTr("Codex usage")
+                        font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.2
+                        font.weight: Font.Bold
+                        elide: Text.ElideRight
+                    }
+
+                    PlasmaComponents.Label {
+                        Layout.fillWidth: true
+                        text: widget.planType ? widget.planType.charAt(0).toUpperCase() + widget.planType.slice(1) + qsTr(" plan") : qsTr("Local account")
+                        color: Kirigami.Theme.disabledTextColor
+                        elide: Text.ElideRight
+                    }
                 }
             }
 
             PlasmaComponents.ToolButton {
+                id: refreshButton
+
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                width: Math.max(Kirigami.Units.iconSizes.medium, implicitWidth)
+                height: Math.max(Kirigami.Units.iconSizes.medium, implicitHeight)
                 icon.name: "view-refresh-symbolic"
                 enabled: !widget.loading
                 onClicked: widget.refresh()
