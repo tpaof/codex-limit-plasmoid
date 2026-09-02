@@ -7,12 +7,12 @@
             }
         ],
         "Category": "System Information",
-        "Description": "Unofficial local Codex usage-limit monitor for KDE Plasma",
+        "Description": "Unofficial Codex usage-limit monitor for KDE Plasma",
         "Icon": "/images/codex-limit.svg",
         "Id": "dev.codex.limitwatch",
         "License": "MIT",
         "Name": "Codex Limit",
-        "Version": "1.0.0"
+        "Version": "1.1.0"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
 }

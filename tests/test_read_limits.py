@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 
 MODULE_PATH = Path(__file__).parents[1] / "contents" / "code" / "read_limits.py"
@@ -93,6 +94,101 @@ class ReadLimitsTest(unittest.TestCase):
             self.assertIsNotNone(snapshot)
             assert snapshot is not None
             self.assertEqual(snapshot["primary"]["used_percent"], 30)
+
+    def test_account_result_includes_allowlisted_gpt_reserve_limit(self) -> None:
+        result = {
+            "rateLimits": {
+                "planType": "plus",
+                "primary": {
+                    "usedPercent": 7,
+                    "windowDurationMins": 300,
+                    "resetsAt": 2_000_000_000,
+                },
+                "secondary": {
+                    "usedPercent": 29,
+                    "windowDurationMins": 10080,
+                    "resetsAt": 2_000_100_000,
+                },
+            },
+            "rateLimitsByLimitId": {
+                "codex": {
+                    "planType": "plus",
+                    "primary": {
+                        "usedPercent": 7,
+                        "windowDurationMins": 300,
+                        "resetsAt": 2_000_000_000,
+                    },
+                    "secondary": {
+                        "usedPercent": 29,
+                        "windowDurationMins": 10080,
+                        "resetsAt": 2_000_100_000,
+                    },
+                },
+                "base_model_inference": {
+                    "limitId": "base_model_inference",
+                    "limitName": "gpt-reserve",
+                    "primary": {
+                        "usedPercent": 0,
+                        "windowDurationMins": 10080,
+                        "resetsAt": 2_000_200_000,
+                        "unexpected_private_field": "must not leave the helper",
+                    },
+                },
+            },
+        }
+
+        snapshot = read_limits.snapshot_from_account_result(result, fetched_at=123.0)
+
+        self.assertIsNotNone(snapshot)
+        assert snapshot is not None
+        self.assertEqual(snapshot["updated_at"], 123.0)
+        self.assertEqual(snapshot["plan_type"], "plus")
+        self.assertEqual(snapshot["primary"]["used_percent"], 7)
+        self.assertEqual(snapshot["secondary"]["used_percent"], 29)
+        self.assertEqual(snapshot["reserve"]["used_percent"], 0)
+        self.assertEqual(snapshot["reserve"]["window_minutes"], 10080)
+        self.assertNotIn("limitName", snapshot["reserve"])
+        self.assertNotIn("unexpected_private_field", snapshot["reserve"])
+
+    def test_app_server_reader_accepts_jsonl_response(self) -> None:
+        response = {
+            "id": 1,
+            "result": {
+                "rateLimits": {
+                    "primary": {"usedPercent": 7, "windowDurationMins": 300},
+                    "secondary": {"usedPercent": 29, "windowDurationMins": 10080},
+                },
+                "rateLimitsByLimitId": {
+                    "base_model_inference": {
+                        "limitName": "gpt-reserve",
+                        "primary": {"usedPercent": 0, "windowDurationMins": 10080},
+                    },
+                },
+            },
+        }
+
+        with tempfile.TemporaryDirectory() as directory:
+            executable = Path(directory) / "fake-codex"
+            executable.write_text(
+                "#!/usr/bin/env python3\n"
+                "import json, sys\n"
+                "response = " + repr(response) + "\n"
+                "for line in sys.stdin:\n"
+                "    request = json.loads(line)\n"
+                "    if request.get('id') == 1:\n"
+                "        print(json.dumps(response), flush=True)\n"
+                "        break\n",
+                encoding="utf-8",
+            )
+            executable.chmod(0o700)
+
+            with mock.patch.object(read_limits, "codex_executable", return_value=str(executable)):
+                snapshot = read_limits.app_server_snapshot(Path(directory))
+
+        self.assertIsNotNone(snapshot)
+        assert snapshot is not None
+        self.assertEqual(snapshot["primary"]["used_percent"], 7)
+        self.assertEqual(snapshot["reserve"]["used_percent"], 0)
 
 
 if __name__ == "__main__":

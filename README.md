@@ -1,19 +1,20 @@
 # Codex Limit for KDE Plasma
 
-An unofficial KDE Plasma 6 widget that shows the latest 5-hour and weekly
-Codex usage limits found in local Codex session logs.
+An unofficial KDE Plasma 6 widget that shows Codex 5-hour, weekly, and
+gpt-reserve weekly usage limits.
 
 Codex Limit is an independent community project. It is not affiliated with,
 endorsed by, or sponsored by OpenAI.
 
 ## Features
 
-- Shows the remaining percentage and reset time for short- and long-term
-  limits.
+- Shows the remaining percentage and reset time for 5-hour, weekly, and
+  gpt-reserve weekly limits when available.
 - Supports percentage and progress-bar modes on the panel.
 - Lets you change the panel icon, icon size, label visibility, and refresh
   interval.
-- Works locally without an API key or network requests.
+- Uses the authentication already managed by the local Codex installation;
+  no separate API key is required.
 
 ## Compatibility
 
@@ -21,15 +22,17 @@ Codex Limit requires:
 
 - Linux with KDE Plasma 6;
 - Python 3 available as `python3`;
+- a local Codex CLI with `codex app-server` support for multi-bucket limits;
 - the Plasma 5 Support module used by Plasma's executable data engine; and
-- local Codex session logs under `$CODEX_HOME/sessions` or
-  `~/.codex/sessions`.
+- an authenticated local Codex installation.
 
 It does not support Plasma 5, Windows, macOS, browser-only Codex usage, or
-machines where Codex has not written a local rate-limit event.
+machines without a local Codex installation. If the installed Codex version
+does not provide the app-server rate-limit method, the widget falls back to
+local session logs and shows only the standard 5-hour and weekly limits.
 
-The local Codex JSONL event format is not a documented public API. A future
-Codex update may require a corresponding update to this widget.
+The fallback Codex JSONL event format is not a documented public API. A future
+Codex update may require a corresponding widget update.
 
 ## Install a release
 
@@ -66,13 +69,14 @@ Python caches, tests, and locally retained artwork.
 
 ## Privacy
 
-The helper scans local Codex JSONL session logs to identify rate-limit events.
-This means it opens and decodes candidate log lines in memory, which can also
-contain conversation data. It emits only the small allowlist of rate-limit
-fields used by the UI and does not display, store, or transmit conversation
-content.
+The helper normally asks the local Codex app-server for account rate limits.
+Codex may make an authenticated service request using its existing login and
+may update its own runtime state. The widget never reads or stores Codex
+credentials and emits only the small allowlist of fields used by the UI.
 
-The widget contains no network client and requires no OpenAI API key. See
+When app-server data is unavailable, the helper scans local Codex JSONL
+session logs. Those files can contain conversation data, but conversation
+content is not displayed, stored, or included in helper output. See
 [PRIVACY.md](PRIVACY.md) for the complete data-flow description.
 
 ## Development

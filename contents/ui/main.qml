@@ -13,6 +13,7 @@ PlasmoidItem {
 
     property var primary: null
     property var secondary: null
+    property var reserve: null
     property var credits: null
     property string planType: ""
     property string errorMessage: ""
@@ -21,6 +22,7 @@ PlasmoidItem {
 
     readonly property int primaryRemaining: primary ? Math.max(0, Math.round(100 - Number(primary.used_percent || 0))) : 0
     readonly property int secondaryRemaining: secondary ? Math.max(0, Math.round(100 - Number(secondary.used_percent || 0))) : 0
+    readonly property int reserveRemaining: reserve ? Math.max(0, Math.round(100 - Number(reserve.used_percent || 0))) : 0
     readonly property url codexIcon: Qt.resolvedUrl("../images/codex-limit.svg")
     readonly property string customIcon: String(Plasmoid.configuration.customIcon || "")
     readonly property var displayIcon: customIcon.length > 0 ? customIcon : codexIcon
@@ -39,7 +41,12 @@ PlasmoidItem {
     Plasmoid.icon: displayIcon
     Plasmoid.status: errorMessage ? PlasmaCore.Types.NeedsAttentionStatus : PlasmaCore.Types.ActiveStatus
     toolTipMainText: "Codex Limit"
-    toolTipSubText: errorMessage ? errorMessage : qsTr("5-hour: %1% left · Weekly: %2% left").arg(primaryRemaining).arg(secondaryRemaining)
+    toolTipSubText: errorMessage ? errorMessage
+        : reserve
+            ? qsTr("5-hour: %1% left · Weekly: %2% left\nGPT-reserve Weekly: %3% left")
+                .arg(primaryRemaining).arg(secondaryRemaining).arg(reserveRemaining)
+            : qsTr("5-hour: %1% left · Weekly: %2% left")
+                .arg(primaryRemaining).arg(secondaryRemaining)
 
     compactRepresentation: CompactRepresentation {
         widget: root
@@ -66,6 +73,7 @@ PlasmoidItem {
 
             primary = result.primary || null
             secondary = result.secondary || null
+            reserve = result.reserve || null
             credits = result.credits || null
             planType = result.plan_type || ""
             updatedAt = Number(result.updated_at || 0)

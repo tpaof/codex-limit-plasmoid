@@ -29,7 +29,7 @@ plasmawindowed dev.codex.limitwatch
 - Add or update parser tests for data-reader changes.
 - Use synthetic fixtures only.
 - Update `CHANGELOG.md` for user-visible changes.
-- Preserve the local-only, no-telemetry design unless a change is discussed
-  and explicitly approved first.
+- Preserve the no-widget-telemetry design and document any data-flow changes
+  before release.
 
 All contributions are accepted under the repository's MIT License.

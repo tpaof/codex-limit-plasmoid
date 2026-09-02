@@ -100,6 +100,14 @@ Item {
                 resetText: full.resetLabel(widget.secondary)
             }
 
+            LimitBar {
+                Layout.fillWidth: true
+                visible: widget.reserve !== null
+                title: qsTr("gpt-reserve Weekly limit")
+                limit: widget.reserve
+                resetText: full.resetLabel(widget.reserve)
+            }
+
             RowLayout {
                 Layout.fillWidth: true
                 visible: widget.credits && (widget.credits.has_credits || widget.credits.unlimited)
@@ -129,7 +137,7 @@ Item {
         PlasmaComponents.Label {
             Layout.fillWidth: true
             text: widget.updatedAt
-                ? qsTr("Local snapshot · updated %1").arg(Qt.formatDateTime(new Date(widget.updatedAt * 1000), Qt.DefaultLocaleShortDate))
+                ? qsTr("Codex snapshot · updated %1").arg(Qt.formatDateTime(new Date(widget.updatedAt * 1000), Qt.DefaultLocaleShortDate))
                 : qsTr("Waiting for Codex data…")
             color: Kirigami.Theme.disabledTextColor
             font: Kirigami.Theme.smallFont
